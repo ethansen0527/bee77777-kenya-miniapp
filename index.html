@@ -1,0 +1,567 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="color-scheme" content="light dark" />
+<link rel="icon" href="data:," />
+<title>Bee77777 Kenya — MiniApp</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+  :root{
+    color-scheme: light dark;
+    --bg:#f4f1ea;
+    --bg-2:#ffffff;
+    --bg-3:#ece7db;
+    --text:#1c1a15;
+    --hint:#6f6a5e;
+    --line:#ddd6c6;
+    --button-bg:#1c1a15;
+    --button-text:#f7d774;
+    --accent-soft:#fdf3d3;
+    --gold:#c9a227;
+    --red:#c1272d;
+    --green:#1e7d4f;
+    --radius:14px;
+    --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#12100d;
+      --bg-2:#1d1a16;
+      --bg-3:#26221c;
+      --text:#f2ede1;
+      --hint:#a89f8d;
+      --line:#38332a;
+      --button-bg:#f7d774;
+      --button-text:#1c1a15;
+      --accent-soft:#2e2a1c;
+    }
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    font-family:var(--font);
+    background:var(--bg);
+    color:var(--text);
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  a{color:inherit}
+  .wrap{max-width:520px;margin:0 auto;padding:0 16px 32px}
+
+  /* ---------- Hero ---------- */
+  .hero{
+    margin:0 -16px;
+    padding:22px 20px 20px;
+    background:#171410;
+    color:#f5efdf;
+    border-bottom:3px solid var(--gold);
+  }
+  .hero-top{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .flag{font-size:13px;font-weight:700;letter-spacing:.04em;background:#006341;color:#fff;padding:4px 9px;border-radius:999px}
+  .hero-live{font-size:12px;color:#cbbf9e;display:flex;align-items:center;gap:6px}
+  .dot{width:7px;height:7px;border-radius:50%;background:#3ddc84;display:inline-block}
+  .hero h1{font-size:30px;line-height:1.08;margin:14px 0 6px;font-weight:800;letter-spacing:-.01em}
+  .hero h1 span{color:var(--gold)}
+  .hero p.lead{margin:0;font-size:15px;line-height:1.5;color:#d8d0ba;max-width:42ch}
+  .hero-meta{margin-top:14px;display:flex;gap:8px;flex-wrap:wrap}
+  .chip{font-size:12.5px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);padding:6px 10px;border-radius:999px;color:#efe8d2}
+  .hero-note{margin-top:12px;font-size:12.5px;line-height:1.55;color:#b7ad93;background:rgba(255,255,255,.06);border:1px dashed rgba(255,255,255,.22);border-radius:8px;padding:9px 11px}
+  .hero-note b{color:#efe8d2}
+
+  /* ---------- Attribution ---------- */
+  .attr{
+    margin-top:16px;
+    background:var(--bg-2);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:16px;
+  }
+  .attr-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+  .attr h2{font-size:13px;text-transform:uppercase;letter-spacing:.07em;color:var(--hint);margin:0;font-weight:700}
+  .attr-status{font-size:12px;font-weight:700;padding:4px 9px;border-radius:999px;white-space:nowrap}
+  .attr-status.ok{background:#e6f4ec;color:#166b3f}
+  .attr-status.none{background:var(--bg-3);color:var(--hint)}
+  @media (prefers-color-scheme: dark){
+    .attr-status.ok{background:#173a28;color:#7fe0ab}
+  }
+  .code-big{
+    margin-top:10px;font-family:var(--mono);font-size:26px;font-weight:700;word-break:break-all;line-height:1.2;
+  }
+  .attr-grid{margin-top:14px;display:grid;grid-template-columns:.82fr 1.18fr;gap:10px}
+  .attr-item{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px 12px;min-width:0}
+  .attr-item label{display:block;font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--hint);margin-bottom:4px;font-weight:700}
+  .attr-item strong{font-size:14px;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .attr-item .mono{font-family:var(--mono);font-size:13px;white-space:normal;word-break:break-all}
+  .attr-note{margin:12px 0 0;font-size:13px;line-height:1.55;color:var(--hint)}
+  .attr-note b{color:var(--text)}
+
+  /* ---------- CTAs ---------- */
+  .cta-stack{margin-top:14px;display:grid;gap:10px}
+  .btn{
+    appearance:none;border:0;cursor:pointer;text-decoration:none;
+    display:flex;align-items:center;justify-content:center;gap:9px;
+    width:100%;padding:15px 16px;border-radius:12px;font-size:16px;font-weight:800;line-height:1.2;text-align:center;
+  }
+  .btn-primary{background:var(--button-bg);color:var(--button-text);box-shadow:0 6px 18px rgba(0,0,0,.18)}
+  .btn-primary:active{transform:translateY(1px)}
+  .btn-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  @media (max-width:380px){.btn-row{grid-template-columns:1fr}}
+  .btn-secondary{background:var(--bg-2);color:var(--text);border:1.5px solid var(--text);font-size:14.5px;padding:13px 10px}
+  .btn-ghost{background:transparent;color:var(--text);border:1px solid var(--line);font-size:14.5px;padding:13px 10px}
+  .cta-hint{font-size:12.5px;color:var(--hint);text-align:center;margin:2px 0 0;line-height:1.5}
+
+  /* ---------- Sections ---------- */
+  section{margin-top:28px}
+  .sec-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:12px}
+  .sec-head h2{font-size:20px;margin:0;font-weight:800;letter-spacing:-.01em}
+  .sec-head span{font-size:12.5px;color:var(--hint);white-space:nowrap}
+
+  .game{
+    background:var(--bg-2);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;margin-bottom:12px;
+  }
+  .game-placeholder{
+    height:150px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;text-align:center;padding:16px;
+    background:repeating-linear-gradient(135deg,#1d1a16 0 14px,#242019 14px 28px);color:#efe8d2;
+  }
+  .game-placeholder .big{font-size:44px;line-height:1}
+  .game-placeholder strong{font-size:15px}
+  .game-placeholder small{color:#b7ad93;font-size:12.5px;max-width:36ch;line-height:1.5}
+  .game-body{padding:14px 16px 16px}
+  .game-body h3{margin:0;font-size:18px;font-weight:800}
+  .game-body p{margin:8px 0 0;font-size:14px;line-height:1.6;color:var(--hint)}
+  .game-body p b{color:var(--text)}
+  .pending-note{margin-top:10px;font-size:12.5px;line-height:1.55;background:var(--bg);border:1px dashed var(--line);border-radius:8px;padding:9px 11px;color:var(--hint)}
+  .pending-note b{color:var(--text)}
+
+  .steps{display:grid;gap:10px}
+  .step{display:flex;gap:12px;background:var(--bg-2);border:1px solid var(--line);border-radius:12px;padding:14px}
+  .step-num{flex:0 0 30px;width:30px;height:30px;border-radius:50%;background:var(--text);color:var(--bg);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px}
+  .step h3{margin:2px 0 4px;font-size:15px}
+  .step p{margin:0;font-size:13.5px;line-height:1.55;color:var(--hint)}
+
+  /* ---------- Team / technical ---------- */
+  .panel{background:var(--bg-2);border:1px solid var(--line);border-radius:var(--radius);padding:16px;margin-bottom:12px}
+  .panel h3{margin:0 0 6px;font-size:16px;font-weight:800}
+  .panel p{margin:0 0 10px;font-size:13.5px;line-height:1.6;color:var(--hint)}
+  .panel p b, .panel li b{color:var(--text)}
+  .panel ol,.panel ul{margin:0;padding-left:20px;font-size:13.5px;line-height:1.7;color:var(--hint)}
+  table{width:100%;border-collapse:collapse;font-size:13px;margin-top:6px}
+  th,td{text-align:left;padding:9px 8px;border-bottom:1px solid var(--line);vertical-align:top;line-height:1.45}
+  th{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--hint)}
+  td code, .mono-inline{font-family:var(--mono);font-size:12px;background:var(--bg-3);padding:1px 5px;border-radius:5px;word-break:break-all}
+  tr:last-child td{border-bottom:0}
+  .copy-row{display:flex;gap:8px;align-items:stretch;margin-top:10px;flex-wrap:wrap}
+  .copy-box{
+    flex:1 1 200px;font-family:var(--mono);font-size:12px;line-height:1.5;background:var(--bg);border:1px solid var(--line);
+    border-radius:8px;padding:9px 10px;word-break:break-all;color:var(--text)
+  }
+  .copy-btn{
+    appearance:none;border:1px solid var(--text);background:var(--text);color:var(--bg);font-weight:700;font-size:13px;
+    padding:9px 14px;border-radius:8px;cursor:pointer;white-space:nowrap
+  }
+  .copy-btn.done{background:var(--green);border-color:var(--green);color:#fff}
+  .checklist{list-style:none;padding:0;margin:0}
+  .checklist li{display:flex;gap:9px;padding:7px 0;border-bottom:1px solid var(--line);font-size:13.5px;line-height:1.55;color:var(--hint)}
+  .checklist li:last-child{border-bottom:0}
+  .checklist li::before{content:"○";flex:0 0 auto;color:var(--hint);font-size:14px;line-height:1.4}
+  .checklist li.done{color:var(--text)}
+  .checklist li.done::before{content:"●";color:var(--green)}
+
+  footer{margin-top:30px;border-top:1px solid var(--line);padding-top:16px;text-align:center}
+  .age{display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;border:2.5px solid var(--red);border-radius:50%;color:var(--red);font-weight:900;font-size:14px;margin-bottom:8px;background:var(--bg-2)}
+  footer p{margin:4px 0;font-size:12.5px;line-height:1.6;color:var(--hint)}
+  footer p strong{color:var(--text)}
+  .toast{
+    position:fixed;left:50%;bottom:22px;transform:translate(-50%,80px);background:#171410;color:#f7d774;font-size:13.5px;font-weight:700;
+    padding:11px 18px;border-radius:999px;opacity:0;transition:all .25s ease;z-index:50;pointer-events:none;max-width:92vw;text-align:center
+  }
+  .toast.show{transform:translate(-50%,0);opacity:1}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="hero-top">
+      <span class="flag">🇰🇪 KENYA</span>
+      <span class="hero-live"><span class="dot"></span> Official MiniApp · @Bee77777KenyaBot</span>
+    </div>
+    <h1>Bee77777 <span>Kenya</span></h1>
+    <p class="lead" id="greeting">Follow the Bot to get the day's activities and play in one tap.</p>
+    <div class="hero-meta">
+      <span class="chip">⚡ Games under a minute per round</span>
+      <span class="chip">🕗 Daily activities · 20:00 (Nairobi, proposed)</span>
+      <span class="chip">💱 Currency: KES</span>
+    </div>
+    <div class="hero-note">Values <b>proposed, pending confirmation</b>: the Bot <b>@Bee77777KenyaBot</b>, the code <b>kenya_ads</b> and the daily push at <b>20:00 (Nairobi time)</b> are defined in the design, but the Bot still has to be created in BotFather. Kenya has <b>no channel yet</b> (Telegram or WhatsApp) and <b>no confirmed top games</b> — so this page names no games and shows no game images.</div>
+  </header>
+
+  <!-- ATTRIBUTION -->
+  <div class="attr" id="attrPanel">
+    <div class="attr-head">
+      <h2>Your source · Attribution</h2>
+      <span class="attr-status none" id="attrStatus">Checking…</span>
+    </div>
+    <div class="code-big" id="sourceCode">—</div>
+    <div class="attr-grid">
+      <div class="attr-item">
+        <label>Visitor</label>
+        <strong id="visitorName">Visitor</strong>
+      </div>
+      <div class="attr-item">
+        <label>First visit</label>
+        <strong class="mono" id="visitTime">—</strong>
+      </div>
+    </div>
+    <p class="attr-note">This code came with your link (<b>startapp</b>) and is the one that should follow your registration and your first deposit. If you came in without a campaign link, it shows as <b>no code</b>. Follow the Bot with the same code so your registration stays linked to this campaign.</p>
+  </div>
+
+  <!-- CTAs -->
+  <div class="cta-stack">
+    <button class="btn btn-primary" id="playBtn" type="button">🎮 Play now</button>
+    <div class="btn-row">
+      <button class="btn btn-secondary" id="followBotBtn" type="button">📢 Follow the Bot</button>
+      <button class="btn btn-ghost" id="channelBtn" type="button">📣 Join the channel</button>
+    </div>
+    <p class="cta-hint">Following the Bot puts you on its list: that is how you get the day's activities at 20:00 (Nairobi time, proposed), even on days you don't play. The Kenya channel is not created yet — the button will link to it once it exists.</p>
+  </div>
+
+  <!-- GAMES -->
+  <section aria-labelledby="gamesTitle">
+    <div class="sec-head">
+      <h2 id="gamesTitle">Top games in Kenya</h2>
+      <span>To be confirmed</span>
+    </div>
+
+    <article class="game">
+      <div class="game-placeholder">
+        <div class="big">🎰</div>
+        <strong>Top game 1</strong>
+        <small>To be confirmed — KOKO will confirm Kenya's top 3 games by betting heat.</small>
+      </div>
+      <div class="game-body">
+        <h3>Top game 1</h3>
+        <p>No game name, provider or details yet — nothing here is invented.</p>
+        <div class="pending-note">ℹ️ Kenya's top games are still <b>pending confirmation</b> by the operations lead (KOKO). No game name, provider, paytable or screenshot is published until confirmed and captured inside Bee77777.</div>
+      </div>
+    </article>
+
+    <article class="game">
+      <div class="game-placeholder">
+        <div class="big">🎲</div>
+        <strong>Top game 2</strong>
+        <small>To be confirmed — KOKO will confirm Kenya's top 3 games by betting heat.</small>
+      </div>
+      <div class="game-body">
+        <h3>Top game 2</h3>
+        <p>No game name, provider or details yet — nothing here is invented.</p>
+        <div class="pending-note">ℹ️ Kenya's top games are still <b>pending confirmation</b> by the operations lead (KOKO). No game name, provider, paytable or screenshot is published until confirmed and captured inside Bee77777.</div>
+      </div>
+    </article>
+
+    <article class="game">
+      <div class="game-placeholder">
+        <div class="big">🃏</div>
+        <strong>Top game 3</strong>
+        <small>To be confirmed — KOKO will confirm Kenya's top 3 games by betting heat.</small>
+      </div>
+      <div class="game-body">
+        <h3>Top game 3</h3>
+        <p>No game name, provider or details yet — nothing here is invented.</p>
+        <div class="pending-note">ℹ️ Kenya's top games are still <b>pending confirmation</b> by the operations lead (KOKO). No game name, provider, paytable or screenshot is published until confirmed and captured inside Bee77777.</div>
+      </div>
+    </article>
+    <p style="font-size:12px;color:var(--hint);margin:2px 2px 0;line-height:1.5">No game images on this page: Kenya has no verified in-game screenshots yet, and no AI image is used to stand in for a real screenshot. Real screenshots are added only after the top games are confirmed and captured inside the Bee77777 platform.</p>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section aria-labelledby="stepsTitle">
+    <div class="sec-head">
+      <h2 id="stepsTitle">How it works</h2>
+      <span>Under a minute</span>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div>
+          <h3>Follow the Bot with your code</h3>
+          <p>Tap “Follow the Bot”: it opens @Bee77777KenyaBot with your same source code (<span class="mono-inline" id="stepCode">kenya_ads</span>). Press Start and finish the 3-step registration: <b>Kenya</b> (fixed country) → your <b>game ID</b> (you can skip it) → <b>18+</b> confirmation.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div>
+          <h3>Join the official channel</h3>
+          <p>The Kenya channel will publish official news and activities. The Bot checks your channel subscription during registration — but the channel is <b>not created yet</b>, so registration completes unverified for now and the check starts working once the channel exists and the Bot is made its admin. Kenya has no WhatsApp channel yet either.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div>
+          <h3>Play and come back anytime</h3>
+          <p>Enter the game from here or from the Bot: it stays in your Telegram chat list as a permanent second way in. Every day at 20:00 (Nairobi time, proposed) the Bot sends the day's activity.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TEAM -->
+  <section aria-labelledby="teamTitle">
+    <div class="sec-head">
+      <h2 id="teamTitle">For the team</h2>
+      <span>Setup &amp; attribution</span>
+    </div>
+
+    <div class="panel">
+      <h3>1 · Create the MiniApp in BotFather</h3>
+      <p>This page is <b>Kenya only</b> (one page per country): it is independent of the main site and needs no changes to bee77777.com. Just register it as a Web App of the Kenya Bot and paste its public address. Proposed hosting: GitHub Pages, repository <b>bee77777-kenya-miniapp</b> → <span class="mono-inline">https://ethansen0527.github.io/bee77777-kenya-miniapp/</span> (to be created).</p>
+      <ol>
+        <li>Open <b>@BotFather</b> in Telegram and send <b><span class="mono-inline">/newapp</span></b>.</li>
+        <li>Pick the Bot: <b>@Bee77777KenyaBot</b> (proposed name, to confirm when creating it).</li>
+        <li>Write the title and description BotFather asks for (in English, for Kenya).</li>
+        <li>When it asks for the <b>Web App URL</b>, paste the public address of this page once published.</li>
+        <li>Use <b><span class="mono-inline">play</span></b> as the <b>short name</b>.</li>
+        <li>Confirm. The MiniApp is then available as <b>t.me/Bee77777KenyaBot/play</b> and supports attribution with <b><span class="mono-inline">?startapp=kenya_ads</span></b>.</li>
+      </ol>
+      <div class="copy-row">
+        <div class="copy-box" id="copyShortName">play</div>
+        <button class="copy-btn" type="button" data-copy-target="copyShortName">Copy</button>
+      </div>
+      <div class="copy-row">
+        <div class="copy-box" id="copyAdLink">https://t.me/Bee77777KenyaBot/play?startapp=kenya_ads</div>
+        <button class="copy-btn" type="button" data-copy-target="copyAdLink">Copy link</button>
+      </div>
+      <p style="margin-top:10px">The link must always carry <span class="mono-inline">/play</span>: without the short name it opens the older main app, not this MiniApp. Variants per channel: change only the code — <span class="mono-inline">https://t.me/Bee77777KenyaBot/play?startapp=kenya_ads_tg</span> for Telegram ads, <span class="mono-inline">https://t.me/Bee77777KenyaBot/play?startapp=kenya_ads_fb</span> for Facebook. Code rules: letters, numbers, <span class="mono-inline">_</span> and <span class="mono-inline">-</span>, max 512 characters in <span class="mono-inline">startapp</span>.</p>
+    </div>
+
+    <div class="panel">
+      <h3>2 · How attribution is read on this page</h3>
+      <p>On open, the page reads the code in this order: <b>Telegram.WebApp.initDataUnsafe.start_param</b> → the <b>tgWebAppStartParam</b> parameter in the URL (query and hash, including inside <b>tgWebAppData</b>). The code is validated (letters, numbers, <span class="mono-inline">_</span>, <span class="mono-inline">-</span> only; max 512) and, if invalid or missing, it shows “no code”. The “Follow the Bot” button reuses that same code in <span class="mono-inline">?start=&lt;code&gt;</span> when it is 64 characters or shorter; for a longer code the button uses the short code <span class="mono-inline">bot</span>, because <span class="mono-inline">?start=</span> accepts at most 64 characters.</p>
+      <p><b>Data kept separate per country:</b> this page stores nothing. Kenya's data lives in the Kenya Bot (its own user database) and in the Kenya shared sheet; it is not mixed with Peru, West Africa or Chile, which have their own Bot, sheet and page.</p>
+    </div>
+
+    <div class="panel">
+      <h3>3 · Events the backend should log</h3>
+      <table>
+        <thead>
+          <tr><th>Event</th><th>When</th><th>Fields</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>miniapp_open</code></td>
+            <td>Every MiniApp open</td>
+            <td>tg_user_id, tg_username, start_param, open_time</td>
+          </tr>
+          <tr>
+            <td><code>register</code></td>
+            <td>Registration completed on the platform</td>
+            <td>The above + game_user_id, register_time</td>
+          </tr>
+          <tr>
+            <td><code>first_deposit</code></td>
+            <td>User's first deposit</td>
+            <td>The above + amount, currency (KES), deposit_time</td>
+          </tr>
+        </tbody>
+      </table>
+      <p style="margin-top:10px">The Telegram identity (<span class="mono-inline">initData</span>) must be validated in the backend with the HMAC-SHA-256 hash before trusting the user. Never put the Bot token in this page's code.</p>
+    </div>
+
+    <div class="panel">
+      <h3>4 · Status of this MiniApp</h3>
+      <ul class="checklist">
+        <li class="done">Kenya's own Web App page, no changes to bee77777.com needed</li>
+        <li class="done">Reads start_param / tgWebAppStartParam and shows it to the visitor</li>
+        <li class="done">“Follow the Bot” button with the same source code</li>
+        <li class="done">Button to the game (bee77777.com); channel button shows “channel not created yet” until the channel exists</li>
+        <li class="done">Game slots are “to be confirmed” placeholders — no game images, no AI images standing in for real screenshots</li>
+        <li>Create the Bot @Bee77777KenyaBot in BotFather and hand over the token via the secure channel (Ethan)</li>
+        <li>Create the repository bee77777-kenya-miniapp and publish the page on GitHub Pages (Ethan)</li>
+        <li>Create the Kenya TG channel (and WhatsApp channel) and make the Bot a channel admin, so subscription can be verified (Ethan)</li>
+        <li>Confirm Kenya's top 3 games, bonus codes, KES tiers and customer-service entry (operations lead KOKO)</li>
+        <li>Verify the top games on their in-game info pages and capture real screenshots inside Bee77777</li>
+        <li>Backend logging of miniapp_open / register / first_deposit (site team)</li>
+      </ul>
+    </div>
+  </section>
+
+  <footer>
+    <div class="age">18+</div>
+    <p><strong>18+ only.</strong></p>
+    <p>Play responsibly. Bee77777 Kenya · Official bot @Bee77777KenyaBot (proposed) · Channel to be created · Daily activities at 20:00 (Nairobi time, proposed).</p>
+  </footer>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+  "use strict";
+  var tg = (window.Telegram && window.Telegram.WebApp) ? window.Telegram.WebApp : null;
+
+  /* ---------- Telegram adaptation ---------- */
+  if (tg) {
+    try { tg.ready(); } catch(e){}
+    try { tg.expand(); } catch(e){}
+    var tp = tg.themeParams || {};
+    var root = document.documentElement.style;
+    if (tp.bg_color) root.setProperty('--bg', tp.bg_color);
+    if (tp.secondary_bg_color) root.setProperty('--bg-2', tp.secondary_bg_color);
+    if (tp.text_color) root.setProperty('--text', tp.text_color);
+    if (tp.hint_color) root.setProperty('--hint', tp.hint_color);
+    if (tp.button_color) root.setProperty('--button-bg', tp.button_color);
+    if (tp.button_text_color) root.setProperty('--button-text', tp.button_text_color);
+    if (tp.colorScheme === 'dark' || tg.colorScheme === 'dark') {
+      root.setProperty('--bg-3', 'rgba(255,255,255,0.08)');
+      root.setProperty('--line', 'rgba(255,255,255,0.14)');
+      root.setProperty('--accent-soft', 'rgba(255,255,255,0.08)');
+    }
+  }
+
+  /* ---------- Attribution parsing ---------- */
+  function sanitize(code){
+    if (!code) return null;
+    code = String(code).trim();
+    if (!/^[A-Za-z0-9_-]{1,512}$/.test(code)) return null;
+    return code;
+  }
+  function fromParams(params){
+    if (!params) return null;
+    var v = params.get('tgWebAppStartParam');
+    if (v) return v;
+    var data = params.get('tgWebAppData');
+    if (data) {
+      try {
+        var inner = new URLSearchParams(data);
+        var sp = inner.get('start_param');
+        if (sp) return sp;
+      } catch(e){}
+    }
+    return null;
+  }
+  function readStartParam(){
+    // 1) Telegram initDataUnsafe
+    if (tg && tg.initDataUnsafe && tg.initDataUnsafe.start_param) {
+      var s = sanitize(tg.initDataUnsafe.start_param);
+      if (s) return s;
+    }
+    // 2) Query string
+    try {
+      var q = new URLSearchParams(window.location.search);
+      var fromQ = sanitize(fromParams(q));
+      if (fromQ) return fromQ;
+    } catch(e){}
+    // 3) Hash (#tgWebAppData=...&tgWebAppStartParam=...)
+    try {
+      var hash = window.location.hash ? window.location.hash.replace(/^#/, '') : '';
+      if (hash) {
+        var h = new URLSearchParams(hash);
+        var fromH = sanitize(fromParams(h));
+        if (fromH) return fromH;
+      }
+    } catch(e){}
+    return null;
+  }
+
+  var code = readStartParam();
+  var codeLabel = code ? code : 'no code';
+  var botCode = (code && code.length <= 64) ? code : 'bot';
+
+  /* ---------- Visitor + timestamp ---------- */
+  var visitor = 'Visitor';
+  if (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) {
+    var u = tg.initDataUnsafe.user;
+    var name = [u.first_name, u.last_name].filter(Boolean).join(' ').trim();
+    if (name) visitor = name;
+    if (u.username) visitor += ' · @' + u.username;
+    if (name) {
+      var g = document.getElementById('greeting');
+      g.textContent = 'Hello, ' + name.split(' ')[0] + '! Follow the Bot to get the day\u2019s activities and play in one tap.';
+    }
+  }
+  function pad(n){ return (n < 10 ? '0' : '') + n; }
+  var now = new Date();
+  var stamp = now.getFullYear() + '-' + pad(now.getMonth()+1) + '-' + pad(now.getDate()) + ' ' + pad(now.getHours()) + ':' + pad(now.getMinutes()) + ':' + pad(now.getSeconds());
+
+  document.getElementById('visitorName').textContent = visitor;
+  document.getElementById('visitTime').textContent = stamp;
+  document.getElementById('sourceCode').textContent = codeLabel;
+  document.getElementById('stepCode').textContent = botCode;
+  var statusEl = document.getElementById('attrStatus');
+  if (code) {
+    statusEl.textContent = '✓ Code detected';
+    statusEl.className = 'attr-status ok';
+  } else {
+    statusEl.textContent = 'No campaign code';
+    statusEl.className = 'attr-status none';
+  }
+
+  /* ---------- Link opening (Telegram-aware) ---------- */
+  function openExternal(url){
+    if (tg && typeof tg.openLink === 'function') { tg.openLink(url); return; }
+    window.open(url, '_blank', 'noopener');
+  }
+  function openTelegram(url){
+    if (tg && typeof tg.openTelegramLink === 'function') { tg.openTelegramLink(url); return; }
+    openExternal(url);
+  }
+
+  document.getElementById('playBtn').addEventListener('click', function(){
+    openExternal('https://bee77777.com');
+  });
+  document.getElementById('followBotBtn').addEventListener('click', function(){
+    openTelegram('https://t.me/Bee77777KenyaBot?start=' + encodeURIComponent(botCode));
+  });
+  // Channel not created yet: the button only shows a notice, it links nowhere.
+  document.getElementById('channelBtn').addEventListener('click', function(){
+    showToast('The Kenya channel is not created yet — stay tuned.');
+  });
+
+  /* ---------- Copy buttons ---------- */
+  var toast = document.getElementById('toast');
+  var toastTimer = null;
+  function showToast(msg){
+    toast.textContent = msg;
+    toast.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function(){ toast.classList.remove('show'); }, 2200);
+  }
+  function copyText(text, btn){
+    function done(){
+      var old = btn.textContent;
+      btn.textContent = '✓ Copied';
+      btn.classList.add('done');
+      showToast('Copied: ' + (text.length > 42 ? text.slice(0,42) + '…' : text));
+      setTimeout(function(){ btn.textContent = old; btn.classList.remove('done'); }, 2000);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(done).catch(function(){ fallback(); });
+    } else { fallback(); }
+    function fallback(){
+      var ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand('copy'); done(); }
+      catch(e){ showToast('Copy manually: ' + text); }
+      document.body.removeChild(ta);
+    }
+  }
+  var copyBtns = document.querySelectorAll('[data-copy-target]');
+  for (var i = 0; i < copyBtns.length; i++) {
+    (function(btn){
+      btn.addEventListener('click', function(){
+        var target = document.getElementById(btn.getAttribute('data-copy-target'));
+        if (target) copyText(target.textContent.trim(), btn);
+      });
+    })(copyBtns[i]);
+  }
+})();
+</script>
+</body>
+</html>
